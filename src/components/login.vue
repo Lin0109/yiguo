@@ -189,29 +189,31 @@
 				this.checkCode = Code;
 			},
 			login(){
-				this.$http.get('./data/login.php',{
-					params:{
-						username: this.$refs.username.value,
-						password: this.$refs.password.value,
-						code: this.$refs.code.value.toUpperCase(),
-						checkCode: this.checkCode.toUpperCase()
-					}
-				})
-				.then((res)=>{
-					if (res.data == '正在登录中'){
+				if (this.$refs.username.value == ''){
+					Toast( "请输入用户名");
+				} else if (this.$refs.password.value == ''){
+					Toast ("请输入密码");
+				} else if (this.$refs.code.value.toUpperCase() == ''){
+					Toast ("验证码不能为空");
+				} else if (this.$refs.code.value.toUpperCase() !== this.checkCode.toUpperCase()){
+					Toast ("验证码错误");
+				}else if (this.$refs.username.value == '13144885373' && this.$refs.password.value == '123') {
 						this.$store.commit('changeLogin');
 						this.$router.push("/my")
-					} else{
-						Toast(res.data);
-					}
-				})
-				.catch(()=>{
-
-				})
-				.finally((f)=>{
-					console.log("请求结束了")
-				})
+				} else{
+					Toast ("用户不存在或密码错误");
+				}
 			}
+		},
+		mounted(){
+			var Code = "";
+			var codeLength = 4;
+			var random = new Array(0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+			for(var i=0;i<codeLength;i++){
+				var index = Math.floor(Math.random()*36);
+				Code += random[index];
+			}
+			this.checkCode = Code;
 		}
 	}
 </script>
